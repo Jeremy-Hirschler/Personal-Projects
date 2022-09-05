@@ -13,24 +13,57 @@ function App() {
   const [foodList, setFoodList] = useState([]);
   const [dailyList, setDailyList] = useState([]);
   const [newDate, setNewDate] = useState('');
-    const [totalCal, setTotalCal] = useState([]);
-    const [totals, setTotals] = useState(0);
 
   return (
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route path = '/foodlog/home' element = {<Main foodList={foodList} setFoodList={setFoodList}
-          dailyList={dailyList} setDailyList={setDailyList}/>} />
-          <Route path = '/foodlog/new' element = {<Form  food = {food} setFood = {setFood}
-          calories = {calories} setCalories = {setCalories} foodList={foodList} setFoodList={setFoodList}
-          dailyList={dailyList} setDailyList={setDailyList} newDate={newDate} setNewDate={setNewDate}
-          totalCal={totalCal} setTotalCal={setTotalCal} totals={totals} setTotals={setTotals}/>} />
-          <Route path = '/foodlog/view/:id' element = {<Day/>}/>
-          <Route path = '/foodlog/update/:id' element = {<Update food = {food} setFood = {setFood}
-          calories = {calories} setCalories = {setCalories} foodList={foodList} setFoodList={setFoodList}
-          dailyList={dailyList} setDailyList={setDailyList} newDate={newDate} setNewDate={setNewDate}
-          totalCal={totalCal} setTotalCal={setTotalCal} totals={totals} setTotals={setTotals}/>}/>
+          <Route 
+          path = '/foodlog/home' 
+          element = {<Main 
+                          foodList={foodList} 
+                          setFoodList={setFoodList}
+                          dailyList={dailyList} 
+                          setDailyList={setDailyList} 
+                    />} 
+          />
+          <Route 
+          path = '/foodlog/new' 
+          element = {<Form  
+                          food = {food} 
+                          setFood = {setFood}
+                          calories = {calories} 
+                          setCalories = {setCalories} 
+                          foodList={foodList} 
+                          setFoodList={setFoodList}
+                          dailyList={dailyList} 
+                          setDailyList={setDailyList} 
+                          newDate={newDate} 
+                          setNewDate={setNewDate}
+                      />} 
+          />
+          <Route 
+          path = '/foodlog/view/:id' 
+          element = {<Day 
+                          foodList={foodList} 
+                          setFoodList={setFoodList}
+                    />}
+          />
+          <Route 
+          path = '/foodlog/update/:id' 
+          element = {<Update 
+                          food = {food} 
+                          setFood = {setFood}
+                          calories = {calories} 
+                          setCalories = {setCalories} 
+                          foodList={foodList} 
+                          setFoodList={setFoodList}
+                          dailyList={dailyList} 
+                          setDailyList={setDailyList} 
+                          newDate={newDate} 
+                          setNewDate={setNewDate}
+                    />}
+          />
           <Route path = '/' element = {<Navigate to = '/foodlog/home'/>} />
         </Routes>
         

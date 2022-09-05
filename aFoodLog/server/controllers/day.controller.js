@@ -50,6 +50,7 @@ module.exports = {
             return res.json(newDay);
         }
         catch(err){
+            res.status(400).json(err)
             console.log('Could not create day', err);
         }
     },
