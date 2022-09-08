@@ -4,6 +4,7 @@ import Main from './components/Main';
 import Form from './components/Form';
 import Day from './components/Day';
 import Update from './components/Update';
+import Login from './components/Login';
 import {useState} from 'react';
 
 
@@ -64,6 +65,7 @@ function App() {
                           setNewDate={setNewDate}
                     />}
           />
+          <Route path = '/foodlog/login' element = {<Login/>} />
           <Route path = '/' element = {<Navigate to = '/foodlog/home'/>} />
         </Routes>
         

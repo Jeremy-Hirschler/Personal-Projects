@@ -49,41 +49,47 @@ const Update = (props) => {
         setErrors({})
     }
     
-        const handleSubmit = (e) => {
-            e.preventDefault();
-            let newTotal = 0;
-            console.log('before')
-            for (let i=0; i < foodList.length; i++){
-                newTotal += Number(foodList[i].calories)
-            }
-            
-            if (foodList.length >= 1){
-                axios.put(`http://localhost:8000/api/days/update/${id}`, {
-                    foods: foodList,
-                    totalCalories: newTotal,
-                    newDate 
-                })
-                .then((res)=> {
-                    setDailyList([...dailyList, res.data])
-                    setFoodList([]);
-                    navigate('/foodlog/home')
-                })
-                .catch((err)=> {
-                    setErrors(err.response.data.errors)
-                    console.log('errors', errors.newDate.message)
-                })
-            }else{
-                setErrors({listLengthMessage: 'Log must contain at least 1 entry!'})
-            }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        let newTotal = 0;
+        console.log('before')
+        for (let i=0; i < foodList.length; i++){
+            newTotal += Number(foodList[i].calories)
         }
-    
-        const removeItem = (uniqueId) => {
-            console.log(uniqueId)
-            const newList = foodList.filter((singleItem)=> {
-                return singleItem.id !== uniqueId
+        
+        if (foodList.length >= 1){
+            axios.put(`http://localhost:8000/api/days/update/${id}`, {
+                foods: foodList,
+                totalCalories: newTotal,
+                newDate 
             })
-            setFoodList(newList);
+            .then((res)=> {
+                setDailyList([...dailyList, res.data])
+                setFoodList([]);
+                navigate('/foodlog/home')
+            })
+            .catch((err)=> {
+                setErrors(err.response.data.errors)
+                console.log('errors', errors.newDate.message)
+            })
+        }else{
+            setErrors({listLengthMessage: 'Log must contain at least 1 entry!'})
         }
+    }
+
+    const removeItem = (uniqueId) => {
+        console.log(uniqueId)
+        const newList = foodList.filter((singleItem)=> {
+            return singleItem.id !== uniqueId
+        })
+        setFoodList(newList);
+    }
+
+    const startOver = (e) => {
+        e.preventDefault()
+        setFoodList([])
+        setErrors({})
+    }
     
     return (
         <div>
@@ -116,8 +122,9 @@ const Update = (props) => {
                 
             {/* add new item, update list in useState */}
                 <form onSubmit={handleSubmit}>
-                    <div className='d-flex mx-auto'>
+                    <div className='d-flex mx-auto justify-content-evenly'>
                         <div className='d-flex align-items-center mx-4'>
+
                             <label>New Food:</label>
                             <input type = 'text' value = {food} 
                             onChange = {(e)=>{setFood(e.target.value)}} className='m-2'/>
@@ -127,25 +134,30 @@ const Update = (props) => {
                             <input type = 'number' value = {calories}
                             onChange = {(e)=> {setCalories(e.target.value)}} className='m-2'/>
                         </div>
-                        <div className='d-flex align-items-center'>
+                        {/* <div className='d-flex align-items-center border border-dark'>
                             <label>Date:</label>
-                            <input type = 'date' value={newDate}
-                            onChange = {(e)=>{setNewDate(e.target.value)}} className='m-2'/>
-                        </div>
-                        <button onClick={addItem} className='btn btn-info mx-2'>Add new item</button>
+                            <p className='m-2'>{date.slice(0,10)}</p>
+                        </div> */}
+                        <button onClick={addItem} className='btn btn-info mx-3'>Add new item</button>
+                        <button onClick={startOver} className='btn btn-primary mx-3'>Start Over</button>
                     </div>
                         <div className='d-flex justify-content-end m-2'>
-                            <button className='btn btn-success'>Update Entry</button>
+                            <button className='btn btn-success mx-5'>Update Entry</button>
                         </div>
-                        {
-                                errors.newDate ?
-                                <p className='d-flex justify-content-end w-75 text-danger'>{errors.newDate.message}</p>: null
-                            }
+                        <div className='d-flex w-50 mx-auto justify-content-evenly'>
+
                             {
                                 errors.listLengthMessage ? 
                                 <p className='text-danger'>{errors.listLengthMessage}</p>:null
-                            } 
+                            }  
+                            {
+                                errors.newDate ?
+                                <p className='text-danger'>{errors.newDate.message}</p>: null
+                            }
+
+                            </div>
                 </form>
+                
             </div>
         </div>
     )

@@ -17,7 +17,7 @@ const Form = (props) => {
             setNewDate, 
         } = props;
 
-    const [errors, setErrors] = useState({});
+    const [formErrors, setFormErrors] = useState({});
 
     useEffect(()=> {
         setFoodList([])
@@ -32,7 +32,7 @@ const Form = (props) => {
         const foodEntry = {food, calories, newDate, id: nanoid()}
         setFoodList([...foodList, foodEntry])
         console.log(foodEntry)
-        setErrors({})
+        setFormErrors({})
     }
 
     const handleSubmit = (e) => {
@@ -43,7 +43,7 @@ const Form = (props) => {
         }
         console.log('foodlist is:', foodList)
         console.log('newDate', newDate)
-        if (foodList.length >= 1){
+        // if (foodList.length >= 1){
             axios.post('http://localhost:8000/api/days', {
                 foods: foodList,
                 totalCalories: calTotal,
@@ -59,12 +59,13 @@ const Form = (props) => {
             })
             .catch((err)=> {
                 //add validatoins
-                setErrors(err.response.data.errors)
-                console.log('errors', errors.newDate.message)
+                setFormErrors(err.response.data.errors)
+                console.log('errors', formErrors.foods.message) 
+                // errors.newDate.message)
             })
-        }else{
-            setErrors({listLengthMessage: 'Log must contain at least 1 entry!'})
-        }
+        // }else{
+        //     setErrors({listLengthMessage: 'Log must contain at least 1 entry!'})
+        // }
     }
 
     const removeItem = (uniqueId, uniqueCalories) => {
@@ -75,8 +76,12 @@ const Form = (props) => {
         setFoodList(newList);
     }
     
-    const startOver = () => {
+    const startOver = (e) => {
+        e.preventDefault()
+        console.log('hi')
         setFoodList([])
+        setFormErrors({})
+        console.log(formErrors)
     }
 
     return (
@@ -109,7 +114,7 @@ const Form = (props) => {
                 </table>
             {/* add new item, update list in useState */}
                 <form onSubmit={handleSubmit}>
-                    <div className='d-flex mx-auto'>
+                    <div className='d-flex mx-auto justify-content-evenly'>
                         <div className='d-flex align-items-center mx-4'>
                             <label>New Food:</label>
                             <input type = 'text' value = {food} 
@@ -126,19 +131,22 @@ const Form = (props) => {
                             onChange = {(e)=>{setNewDate(e.target.value)}} className='m-2'/>
                         </div>
                         <button onClick={addItem} className='btn btn-info mx-3'>Add new item</button>
-                        <button onClick={startOver} className='btn btn-primary mx-3'>Start Over</button>
+                        <button onClick={startOver} className='btn btn-primary mx-1'>Start Over</button>
                     </div>
                         <div className='d-flex justify-content-end m-2'>
                             <button className='btn btn-success'>Submit Entry</button>
                         </div>
+                        <div className='d-flex w-50 mx-auto justify-content-evenly'>
+
                             {
-                                errors.newDate ?
-                                <p className='d-flex justify-content-end w-75 text-danger'>{errors.newDate.message}</p>: null
+                                formErrors.foods ? 
+                                <p className='text-danger'>{formErrors.foods.message}</p>:null
                             }
                             {
-                                errors.listLengthMessage ? 
-                                <p className='text-danger'>{errors.listLengthMessage}</p>:null
+                                formErrors.newDate ?
+                                <p className='text-danger'>{formErrors.newDate.message}</p>: null
                             }
+                        </div>
                 </form>
             </div>
         </div>
