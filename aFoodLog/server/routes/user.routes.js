@@ -4,5 +4,5 @@ module.exports = (app) => {
     app.post('/api/register', UserController.registerUser);
     app.post('/api/login', UserController.login);
     app.get('/api/getUser', UserController.getUser);
-    app.get('/logout', UserController.logout);
+    app.get('/api/logout', UserController.logout);
 }

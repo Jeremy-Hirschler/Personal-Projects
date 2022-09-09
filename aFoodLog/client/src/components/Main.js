@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Main = (props) => {
-    
+    const navigate = useNavigate();
     const [loaded, setLoaded] = useState(false)
     const {dailyList, setDailyList} = props;
 
@@ -31,9 +31,21 @@ const Main = (props) => {
             setDailyList(newDailyList);
         })
     }
+
+    const handleLogout = () => {
+        axios.get('http://localhost:8000/api/logout')
+        .then((res)=> {
+            console.log(res)
+            navigate('/foodlog/login')
+        })
+        .catch((err)=> {
+            console.log(err)
+        })
+    }
     
     return (
         <div>
+            <button onClick={handleLogout}>Logout</button>
             <div className='border border-dark w-75 mx-auto my-3'>
                 <div className='d-flex justify-content-between'>
                     <h2 className='d-flex justify-content-start mx-4 my-3'>Daily Log: Latest Entries</h2>

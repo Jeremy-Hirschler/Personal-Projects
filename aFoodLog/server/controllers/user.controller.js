@@ -6,47 +6,66 @@ require('dotenv');
 module.exports = {
 
     registerUser: async (req, res) => {
-        // try{
-        //     const user = await User.create(req.body)
-        //     const newUser = await user.save()
-        //     const userToken = jwt.sign({_id: newUser._id, email: newUser.email}, process.env.SECRET_KEY)
-        //     res.status(201).cookie('userToken', userToken,{
-        //         httpOnly: true
-        //     }).json({msg: 'sucess message'})
-        // }catch(err){
-        //    res.status(400).json(err)
-        // }
+        //make sure email is not registered already
         try{
-            const newUser = await User.create(req.body);
-            res.json(newUser)
+            const verifyUser = await User.findOne({email: req.body.email});
+            if (verifyUser){
+                res.status(400).json({errMessage: 'Email already exists'});
+                return;
+            }
         }catch(err){
-            res.status(400).json(error)
+            res.status(400).json(err)
+        }
+
+        let newUser = new User(req.body)
+
+        try{
+            const newUserObject = await newUser.save();
+            res.json(newUserObject)
+        }catch(err){
+            res.status(400).json(err)
         }
     },
     
 
     login: async (req, res) => {
+        if (!req.body.email){
+            res.status(400).json({err: 'No email provided, please provide'})
+            return;
+        }
+
+        let userQuery;
+
         try{
-            const user = await User.findOne({email: req.body.email})
-            if (user === null){
-                return res.sendStatus(400)
+            userQuery = await User.findOne({email: req.body.email})
+            if (userQuery === null){
+                res.status(400).json({msg: 'email not found'});
+                return;
             }
-            const correctPassword = await bcrypt.compare(req.body.password, user.password)
-            if(!correctPassword){
-                return res.sendStatus(400)
-            }
-            const userToken = jwt.sign({_id: user._id}, process.env.SECRET_KEY)
-            res
-                .cookie('userToken', userToken, secret, {
-                    httpOnly: true
-                })
-                .json({msg:'Success'})
         }
         catch(err){
-            console.log(err)
+            res.status(400).json({msg: 'email not found'})
         }
-    },
 
+
+        const correctPassword = await bcrypt.compare(req.body.password, userQuery.password)
+        if(!correctPassword){
+            res.status(400).json({error: 'email and password do not match'});
+            return;
+        }
+        //send user jwt if user exists and password matches
+        const userToken = jwt.sign({_id: userQuery._id}, process.env.SECRET_KEY);
+        res.cookie('userToken', userToken, process.env.SECRET_KEY, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 900000000)
+        }).json({msg: 'successful login'});
+        // res
+        //     .cookie('userToken', userToken, secret, {
+        //         httpOnly: true
+        //     })
+        //     .json({msg:'Success'})
+    },
+    
     logout: (req, res) => {
         res.clearCookie('userToken');
         res.sendStatus(200);

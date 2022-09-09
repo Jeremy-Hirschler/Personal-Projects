@@ -5,7 +5,9 @@ import Form from './components/Form';
 import Day from './components/Day';
 import Update from './components/Update';
 import Login from './components/Login';
+import Register from './components/Register';
 import {useState} from 'react';
+import axios from 'axios';
 
 
 function App() {
@@ -15,9 +17,21 @@ function App() {
   const [dailyList, setDailyList] = useState([]);
   const [newDate, setNewDate] = useState('');
 
+//   const handleLogout = () => {
+//     axios.get('http://localhost:8000/api/logout')
+//     .then((res)=> {
+//         console.log(res)
+//         nav
+//     })
+//     .catch((err)=> {
+//         console.log(err)
+//     })
+// }
+
   return (
     <BrowserRouter>
       <div className="App">
+        {/* <button onClick = {handleLogout}>Logout</button> */}
         <Routes>
           <Route 
           path = '/foodlog/home' 
@@ -65,6 +79,7 @@ function App() {
                           setNewDate={setNewDate}
                     />}
           />
+          <Route path = '/foodlog/register' element = {<Register/>} />
           <Route path = '/foodlog/login' element = {<Login/>} />
           <Route path = '/' element = {<Navigate to = '/foodlog/home'/>} />
         </Routes>
