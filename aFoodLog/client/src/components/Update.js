@@ -93,13 +93,13 @@ const Update = (props) => {
     
     return (
         <div>
-            <div className='border border-dark col-10 mx-auto my-3'>
+            <div className='border border-dark mx-auto my-3 container'>
                 <div className='d-flex justify-content-between'>
                     <h2 className='d-flex justify-content-start mx-4 my-3'>Daily Entry for {date.slice(0,10)}</h2>
                     <Link to = '/foodlog/home' className='mx-3 my-4'>Go Home</Link>
                 </div>
-                <table className='table table-striped w-75 mx-auto my-3'>
-                    <thead>
+                <table className='table table-striped table-dark w-75 mx-auto my-3'>
+                    <thead className='tableHead'>
                         <tr className='border border-dark'>
                             <th>Food</th>
                             <th>Calories</th>
@@ -138,10 +138,10 @@ const Update = (props) => {
                             <label>Date:</label>
                             <p className='m-2'>{date.slice(0,10)}</p>
                         </div> */}
-                        <button onClick={addItem} className='btn btn-info mx-3'>Add new item</button>
-                        <button onClick={startOver} className='btn btn-primary mx-3'>Start Over</button>
                     </div>
-                        <div className='d-flex justify-content-end m-2'>
+                        <div className='d-flex justify-content-end py-2'>
+                            <button onClick={addItem} className='btn btn-warning mx-3'>Add new item</button>
+                            <button onClick={startOver} className='btn btn-primary mx-2'>Start Over</button>
                             <button className='btn btn-success mx-5'>Update Entry</button>
                         </div>
                         <div className='d-flex w-50 mx-auto justify-content-evenly'>

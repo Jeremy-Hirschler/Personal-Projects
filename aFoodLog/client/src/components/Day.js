@@ -25,13 +25,13 @@ const Day = (props) => {
 
     return (
         <div>
-            <div className='border border-dark w-75 mx-auto my-3'>
+            <div className='border border-dark rounded w-75 mx-auto my-3 container'>
                 <div className='d-flex justify-content-between'>
                     <h2 className='d-flex justify-content-start mx-4 my-3'>Daily Entry for {date.slice(0,10)}</h2>
                     <Link to = '/foodlog/home' className='mx-3 my-4'>Go Home</Link>
                 </div>
-                <table className='table table-striped w-75 mx-auto my-3'>
-                    <thead>
+                <table className='table table-striped table-dark w-75 mx-auto my-3'>
+                    <thead className='tableHead'>
                         <tr className='border border-dark'>
                             <th>Food</th>
                             <th>Calories</th>
@@ -49,7 +49,7 @@ const Day = (props) => {
                         }
                     </tbody>
                 </table>
-                <div className='m-2 w-75 d-flex justify-content-end text-success'>
+                <div className='m-2 w-75 d-flex justify-content-end text-white'>
                     <h4>Total Calories: {oneDay.totalCalories}</h4>
                 </div>
             </div>

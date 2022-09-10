@@ -1,4 +1,6 @@
 const Log = require('../models/day.model');
+const jwt = require('jsonwebtoken');
+require('dotenv');
 
 module.exports = {
     // findDay: (req, res) => {
@@ -45,13 +47,35 @@ module.exports = {
     },
 
     createDay: async (req, res) => {
+        let newDay = new Log(req.body);
+        console.log(newDay)
+        console.log('afternewday')
+        // let decodedjwt;
+        
+        // try{
+        //     decodedjwt = await jwt.verify(req.cookies.userToken, process.env.SECRET_KEY)
+        //     console.log('decoded', decodedjwt)
+            
+        //     console.log('success', req.cookies.userToken)
+        //     req.body.user_id = decodedjwt._id;//CHECK if user_id is correct
+            
+        // }catch(err){
+        //     console.log('Token error')
+            
+        //     res.status(400).json({errorMsg: 'You must be logged in'})
+        //     return;
+        // }
+
+        console.log('reqbody', req.body)
         try{
-            const newDay = await Log.create(req.body);
-            return res.json(newDay);
+            newDay = await newDay.save();
+            res.json(newDay);
+            return;
         }
         catch(err){
-            res.status(400).json(err)
+            res.status(401).json(err)
             console.log('Could not create day', err);
+            return;
         }
     },
     

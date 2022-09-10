@@ -18,6 +18,7 @@ const Form = (props) => {
         } = props;
 
     const [formErrors, setFormErrors] = useState({});
+    const [authError, setAuthError] = useState('');
 
     useEffect(()=> {
         setFoodList([])
@@ -41,15 +42,16 @@ const Form = (props) => {
         for (let i=0; i < foodList.length; i++){
             calTotal += Number(foodList[i].calories)
         }
+        
         console.log('foodlist is:', foodList)
         console.log('newDate', newDate)
+        // console.log('document.cookie', document.cookie)
         // if (foodList.length >= 1){
             axios.post('http://localhost:8000/api/days', {
                 foods: foodList,
                 totalCalories: calTotal,
                 newDate
-                
-            })
+                }, {withCredentials: true})
             .then((res)=> {
                 console.log(res.data)
                 setDailyList([...dailyList, res.data])
@@ -59,9 +61,17 @@ const Form = (props) => {
             })
             .catch((err)=> {
                 //add validatoins
+                // console.log('errors', formErrors.foods.message) 
+                // if (err.response.status === 401){
+                //     setAuthError('You must be logged in to make a submission')
+                // }else{
+                //     setFormErrors(err.response.data.errors)
+                // console.log(err)
+                // }
+                // if (err.response.status === 401)
+                console.log('submit error', err)
                 setFormErrors(err.response.data.errors)
-                console.log('errors', formErrors.foods.message) 
-                // errors.newDate.message)
+                console.log('err', err.response.data.errors.foods.message)
             })
         // }else{
         //     setErrors({listLengthMessage: 'Log must contain at least 1 entry!'})
@@ -86,13 +96,13 @@ const Form = (props) => {
 
     return (
         <div>
-            <div className='border border-dark col-10 mx-auto my-3'>
+            <div className='border border-dark w-75 mx-auto my-3 container'>
                 <div className='d-flex justify-content-between'>
                     <h2 className='d-flex justify-content-start mx-4 my-3'>Daily Entry for {newDate}</h2>
                     <Link to = '/foodlog/home' className='mx-3 my-4'>Go Home</Link>
                 </div>
-                <table className='table table-striped w-75 mx-auto my-3'>
-                    <thead>
+                <table className='table table-striped table-dark w-75 mx-auto my-3'>
+                    <thead className='tableHead'>
                         <tr className='border border-dark'>
                             <th>Food</th>
                             <th>Calories</th>
@@ -130,21 +140,22 @@ const Form = (props) => {
                             <input type = 'date' value={newDate}
                             onChange = {(e)=>{setNewDate(e.target.value)}} className='m-2'/>
                         </div>
-                        <button onClick={addItem} className='btn btn-info mx-3'>Add new item</button>
-                        <button onClick={startOver} className='btn btn-primary mx-1'>Start Over</button>
                     </div>
-                        <div className='d-flex justify-content-end m-2'>
-                            <button className='btn btn-success'>Submit Entry</button>
+                    <div className='d-flex justify-content-end py-2'>
+                        <button onClick={addItem} className='btn btn-warning mx-3'>Add new item</button>
+                        <button onClick={startOver} className='btn btn-primary mx-2'>Start Over</button>
+                        {/* <div className='d-flex justify-content-end m-2'> */}
+                            <button className='btn btn-success mx-5'>Submit Entry</button>
                         </div>
                         <div className='d-flex w-50 mx-auto justify-content-evenly'>
 
                             {
                                 formErrors.foods ? 
-                                <p className='text-danger'>{formErrors.foods.message}</p>:null
+                                <p className='text-white'>Error: {formErrors.foods.message}</p>:null
                             }
                             {
                                 formErrors.newDate ?
-                                <p className='text-danger'>{formErrors.newDate.message}</p>: null
+                                <p className='text-white'>Error: {formErrors.newDate.message}</p>: null
                             }
                         </div>
                 </form>

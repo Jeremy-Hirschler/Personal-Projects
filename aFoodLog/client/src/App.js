@@ -16,6 +16,7 @@ function App() {
   const [foodList, setFoodList] = useState([]);
   const [dailyList, setDailyList] = useState([]);
   const [newDate, setNewDate] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
 //   const handleLogout = () => {
 //     axios.get('http://localhost:8000/api/logout')
@@ -40,6 +41,8 @@ function App() {
                           setFoodList={setFoodList}
                           dailyList={dailyList} 
                           setDailyList={setDailyList} 
+                          successMsg={successMsg}
+                          setSuccessMsg={setSuccessMsg}
                     />} 
           />
           <Route 
@@ -79,9 +82,9 @@ function App() {
                           setNewDate={setNewDate}
                     />}
           />
-          <Route path = '/foodlog/register' element = {<Register/>} />
-          <Route path = '/foodlog/login' element = {<Login/>} />
-          <Route path = '/' element = {<Navigate to = '/foodlog/home'/>} />
+          <Route path = '/foodlog/register' element = {<Register successMsg={successMsg} setSuccessMsg={setSuccessMsg}/>} />
+          <Route path = '/foodlog/login' element = {<Login successMsg={successMsg} setSuccessMsg={setSuccessMsg}/>} />
+          <Route path = '/' element = {<Navigate to = '/foodlog/login'/>} />
         </Routes>
         
       </div>

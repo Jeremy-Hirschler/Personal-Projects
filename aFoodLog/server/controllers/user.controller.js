@@ -10,7 +10,10 @@ module.exports = {
         try{
             const verifyUser = await User.findOne({email: req.body.email});
             if (verifyUser){
-                res.status(400).json({errMessage: 'Email already exists'});
+                res.status(400).json({errors: {
+                    message: 'Email already exists!'
+                }
+            });
                 return;
             }
         }catch(err){
@@ -18,47 +21,55 @@ module.exports = {
         }
 
         let newUser = new User(req.body)
-
+        
         try{
             const newUserObject = await newUser.save();
+            console.log('newuserobject', newUserObject)
             res.json(newUserObject)
-        }catch(err){
-            res.status(400).json(err)
+        }catch(error){
+            res.status(400).json(error)
         }
     },
     
 
     login: async (req, res) => {
+
+        
         if (!req.body.email){
-            res.status(400).json({err: 'No email provided, please provide'})
+            res.status(400).json({error: 'No email provided, please provide'})
             return;
         }
 
         let userQuery;
-
+        
         try{
+            
             userQuery = await User.findOne({email: req.body.email})
+            console.log('reqbody', req.body)
+            console.log('userQuery', userQuery)
+            console.log('userQuery id from login', userQuery._id)
             if (userQuery === null){
-                res.status(400).json({msg: 'email not found'});
+                res.status(400).json({error: 'email not found'});
                 return;
             }
+            const correctPassword = bcrypt.compareSync(req.body.password, userQuery.password)
+            if(!correctPassword){
+                res.status(400).json({error: 'email and password do not match'});
+                return;
+            }
+            const userToken = jwt.sign({_id: userQuery._id}, process.env.SECRET_KEY);
+            res.cookie('userToken', userToken, process.env.SECRET_KEY, {
+                httpOnly: true,
+                expires: new Date(Date.now() + 900000000)
+            }).json({msg: 'successful login'})
         }
         catch(err){
-            res.status(400).json({msg: 'email not found'})
+            res.status(400).json({error: 'email not found'})
         }
 
-
-        const correctPassword = await bcrypt.compare(req.body.password, userQuery.password)
-        if(!correctPassword){
-            res.status(400).json({error: 'email and password do not match'});
-            return;
-        }
+        console.log('userquery', userQuery)
         //send user jwt if user exists and password matches
-        const userToken = jwt.sign({_id: userQuery._id}, process.env.SECRET_KEY);
-        res.cookie('userToken', userToken, process.env.SECRET_KEY, {
-            httpOnly: true,
-            expires: new Date(Date.now() + 900000000)
-        }).json({msg: 'successful login'});
+        //SAME COOKIE BEING SENT TO DIFF USERS
         // res
         //     .cookie('userToken', userToken, secret, {
         //         httpOnly: true
@@ -67,8 +78,11 @@ module.exports = {
     },
     
     logout: (req, res) => {
-        res.clearCookie('userToken');
-        res.sendStatus(200);
+        res.clearCookie('userToken', {
+            sameSite: 'none',
+            secure: true
+        });
+        res.json({msg: 'logout successful'});
     },
 
     getUser: (req, res)=> {
@@ -77,8 +91,8 @@ module.exports = {
         .then((user)=> {
             res.json(user)
         })
-        .catch((err)=> {
-            console.log(err)
+        .catch((error)=> {
+            console.log(error)
         })
     }
     
