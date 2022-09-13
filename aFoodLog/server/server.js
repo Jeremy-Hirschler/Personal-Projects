@@ -5,7 +5,6 @@ const PORT = process.env.PORT;
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-
 app.use(express.json(), express.urlencoded({extended: true}));
 app.use(cors({credentials: true,
     origin: 'http://localhost:3000'

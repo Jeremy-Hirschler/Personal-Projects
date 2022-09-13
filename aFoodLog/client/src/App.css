@@ -2,12 +2,11 @@
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-
 .App {
   text-align: center;
 }
 
-.container {
+.column {
   background-color: #2274A5;
 }
 
@@ -31,6 +30,11 @@ a:hover {
 
 .errColor {
   color: #660000;
+}
+
+h4 {
+  color: #f2f2f2;
+  text-decoration: underline;
 }
 
 @media (prefers-reduced-motion: no-preference) {

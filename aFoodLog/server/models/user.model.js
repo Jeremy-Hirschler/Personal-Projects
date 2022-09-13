@@ -2,17 +2,16 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
-
     email: {
         type: String,
         required: [true, 'Email is required!'],
         validate: {
+            //use regex to validate email address
             validator: function(val){
                 return /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val);
             },
             message: "Please enter a valid email"
         }
-
     },
 
     password: {
@@ -21,7 +20,6 @@ const UserSchema = new mongoose.Schema({
         minlength: [5, 'Password must be at least 5 characters!']
     }
 }, {timestamps: true})
-
 
 UserSchema.virtual('confirmPassword')
     .get(() => this._confirmPassword )
@@ -32,7 +30,6 @@ UserSchema.pre('validate', function(next) {
         this.invalidate('confirmPassword', 'Password must match');
     }
     next();
-    
 });
 
 UserSchema.pre('validate', function(next) {
@@ -45,6 +42,5 @@ UserSchema.pre('validate', function(next) {
             console.log(err)
         });
 });
-
 
 module.exports = mongoose.model('User', UserSchema);

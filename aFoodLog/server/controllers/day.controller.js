@@ -3,15 +3,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv');
 
 module.exports = {
-    // findDay: (req, res) => {
-    //     Log.findOne({_id: req.params.id})
-    //     .then((day) => {
-    //         res.json(day)
-    //     })
-    //     .catch((err)=> {
-    //         console.log('Could not find one', err)
-    //     })
-    // },
 
     findDay: async (req, res) => {
         try{
@@ -48,25 +39,6 @@ module.exports = {
 
     createDay: async (req, res) => {
         let newDay = new Log(req.body);
-        console.log(newDay)
-        console.log('afternewday')
-        // let decodedjwt;
-        
-        // try{
-        //     decodedjwt = await jwt.verify(req.cookies.userToken, process.env.SECRET_KEY)
-        //     console.log('decoded', decodedjwt)
-            
-        //     console.log('success', req.cookies.userToken)
-        //     req.body.user_id = decodedjwt._id;//CHECK if user_id is correct
-            
-        // }catch(err){
-        //     console.log('Token error')
-            
-        //     res.status(400).json({errorMsg: 'You must be logged in'})
-        //     return;
-        // }
-
-        console.log('reqbody', req.body)
         try{
             newDay = await newDay.save();
             res.json(newDay);
@@ -89,7 +61,4 @@ module.exports = {
             console.log('Could not delete', err);
         }
     }
-
-
-
 }

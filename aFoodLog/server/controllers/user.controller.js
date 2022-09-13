@@ -19,35 +19,23 @@ module.exports = {
         }catch(err){
             res.status(400).json(err)
         }
-
         let newUser = new User(req.body)
-        
         try{
             const newUserObject = await newUser.save();
-            console.log('newuserobject', newUserObject)
             res.json(newUserObject)
         }catch(error){
             res.status(400).json(error)
         }
     },
     
-
     login: async (req, res) => {
-
-        
         if (!req.body.email){
             res.status(400).json({error: 'No email provided, please provide'})
             return;
         }
-
         let userQuery;
-        
         try{
-            
             userQuery = await User.findOne({email: req.body.email})
-            console.log('reqbody', req.body)
-            console.log('userQuery', userQuery)
-            console.log('userQuery id from login', userQuery._id)
             if (userQuery === null){
                 res.status(400).json({error: 'email not found'});
                 return;
@@ -57,6 +45,7 @@ module.exports = {
                 res.status(400).json({error: 'email and password do not match'});
                 return;
             }
+            //send user jwt if user exists and password matches
             const userToken = jwt.sign({_id: userQuery._id}, process.env.SECRET_KEY);
             res.cookie('userToken', userToken, process.env.SECRET_KEY, {
                 httpOnly: true,
@@ -66,15 +55,6 @@ module.exports = {
         catch(err){
             res.status(400).json({error: 'email not found'})
         }
-
-        console.log('userquery', userQuery)
-        //send user jwt if user exists and password matches
-        //SAME COOKIE BEING SENT TO DIFF USERS
-        // res
-        //     .cookie('userToken', userToken, secret, {
-        //         httpOnly: true
-        //     })
-        //     .json({msg:'Success'})
     },
     
     logout: (req, res) => {
