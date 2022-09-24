@@ -19,7 +19,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="App d-flex">
+      <div className="App d-flex flex-column">
         <Routes>
           <Route 
             path = '/foodlog/home' 
@@ -73,6 +73,8 @@ function App() {
           <Route path = '/foodlog/about' element = {<About/>} />
           <Route path = '/' element = {<Navigate to = '/foodlog/login'/>} />
         </Routes>
+        <p
+        >Made by<a className='mx-1' id='githubLink' href='https://github.com/Jeremy-Hirschler' target={'_blank'}>Jeremy</a></p>
       </div>
     </BrowserRouter>
   );
